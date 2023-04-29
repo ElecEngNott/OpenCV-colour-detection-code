@@ -1,0 +1,69 @@
+#include <iostream>
+#include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+
+using namespace cv;
+using namespace std;
+
+int main( )
+{
+    while(1){
+  Mat BlueCar=imread("BlueCar.bmp");
+  Mat RedCar;
+  Mat GreenCar;
+  namedWindow("BlueCar",CV_WINDOW_AUTOSIZE);
+  imshow("BlueCar",BlueCar);
+  cvtColor(BlueCar,BlueCar,COLOR_BGR2HSV); //Convert to HSV colour space
+
+  Mat OutputImage;
+  inRange(BlueCar,Scalar(100,50,50),Scalar(130,255,255),OutputImage);
+
+  Mat OutputImage2;
+  inRange(BlueCar,Scalar(1,90,50),Scalar(10,110,100),OutputImage2);
+
+  Mat OutputImage3;
+  Mat redMask1;
+  Mat redMask2;
+   inRange(BlueCar, Scalar(0, 70, 50), Scalar(10, 255, 255), redMask1); //Two colour ranges for red
+   inRange(BlueCar, Scalar(170, 70, 50), Scalar(180, 255, 255), redMask2);
+   OutputImage3 = redMask1 | redMask2; // combine masks
+
+
+
+  int x1, x2, x3;
+  x1=countNonZero(OutputImage);
+  x2=countNonZero(OutputImage2);
+  x3=countNonZero(OutputImage3);
+
+  int Max=x1;
+
+  if(Max<x2)
+  {
+    Max=x2;
+  }
+  if(Max<x3)
+  {
+      Max=x3;
+  }
+
+  if(Max==x1)
+  {
+      cout<<"BlueCar"<<endl;
+  }
+    if(Max==x2)
+  {
+      cout<<"RedCar"<<endl;
+  }
+    if(Max==x3)
+  {
+      cout<<"GreenCar"<<endl;
+  }
+
+  imshow("blue",OutputImage);
+  imshow("red",OutputImage2);
+  imshow("green",OutputImage3);
+  waitKey(0);
+    }
+    return(0);
+}
